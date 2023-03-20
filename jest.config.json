@@ -1,0 +1,9 @@
+{
+  "showSeed": true,
+  "transform": {
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {}
+    ]
+  }
+}
