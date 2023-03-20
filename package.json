@@ -46,7 +46,7 @@
     "clean-install": "yarn install && git checkout -- .vscode/settings.json '.yarn/*/LICENSE'",
     "compile": "yarn run -B tsc && yarn run -B esbuild --bundle --external:vscode --outdir=./build/ --platform=node --sourcemap=inline ./lib/event-curator.js",
     "lint": "yarn run -B eslint --max-warnings 0 src",
-    "postinstall": "yarn sdks vscode",
+    "prepare": "yarn sdks vscode",
     "repatch": "git add -- package.json && yarn patch-commit -s \"$1\" && git checkout -- package.json && yarn clean-install",
     "test": "yarn run -B jest",
     "upgrade-all": "printf >&2 '%s\\n\\t%s\\n' 'Run the following command line manually:' 'yarn set version stable && yarn install && yarn upgrade-packages' && false",
