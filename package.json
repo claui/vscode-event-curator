@@ -1,6 +1,6 @@
 {
   "name": "vscode-event-curator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Useful document events for your VS Code extension to consume",
   "author": "Claudia Pellegrino",
   "license": "SEE LICENSE IN README.md",
