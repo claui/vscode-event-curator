@@ -49,7 +49,7 @@ export function excludeUriSchemes<T>(
   extractUri: (event: T) => Uri,
   upstreamEvent: Event<T>,
 ): Event<T> {
-  const schemesToExcludeArray: String[] = Array.from(schemesToExclude);
+  const schemesToExcludeArray: string[] = Array.from(schemesToExclude);
   function isSchemeRelevant(uri: Uri) {
     return !schemesToExcludeArray.includes(uri.scheme);
   }
@@ -61,14 +61,14 @@ export function ignoreIfAlreadyClosed(upstreamEvent: Event<TextDocument>) {
 }
 
 /**
- * @this any passed through to the upstream event.
+ * @this unknown passed through to the upstream event.
  */
 export function select<T>(
   match: (e: T) => boolean,
   upstreamEvent: Event<T>,
 ): Event<T> {
   return (...[listener, listenerThisArgs, disposables]) => {
-    const upstreamListener: (e: T) => any = (e) => {
+    const upstreamListener: (e: T) => unknown = (e) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return match(e) ? listener.call(listenerThisArgs, e) : null;
     };
