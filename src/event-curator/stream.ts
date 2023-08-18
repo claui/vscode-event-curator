@@ -2,9 +2,8 @@ import { Event } from "vscode";
 
 type Arr = readonly unknown[];
 
-export interface EventStreamFunction<T, U, A extends Arr> {
-  (...args: [...A, Event<T>]): Event<U>;
-}
+export type EventStreamFunction<T, U, A extends Arr> =
+  (...args: [...A, Event<T>]) => Event<U>;
 
 export interface EventStream<T> {
   select(fn: EventStreamFunction<T, T, []>): EventStream<T> & Event<T>;
