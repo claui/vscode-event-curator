@@ -1,5 +1,10 @@
-import { hello } from "../src/index";
+import { EventCurator } from "vscode-event-curator";
 
-test("prints Hello, world!", () => {
-  expect(hello()).toEqual("Hello, world!");
+describe("EventCurator", () => {
+  test("constructor", () => {
+    expect(() => new EventCurator({
+      language: "ifm",
+      changeEventThrottleMillis: 1000,
+    })).not.toThrow();
+  });
 });
