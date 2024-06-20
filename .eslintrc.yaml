@@ -9,6 +9,10 @@ ignorePatterns:
   - lib/
   - types/
 overrides:
+  - files: "**/*.fake.ts"
+    parserOptions:
+      project:
+        - tsconfig.linting.json
   - files: "**/*.test.ts"
     env:
       jest/globals: true

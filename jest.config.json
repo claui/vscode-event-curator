@@ -1,9 +1,12 @@
 {
+  "moduleNameMapper": {
+    "^vscode$": "<rootDir>/test/fakes/vscode.fake.ts"
+  },
   "showSeed": true,
   "transform": {
     "^.+\\.tsx?$": [
       "ts-jest",
-      {}
+      { "tsconfig": "tsconfig.test.json" }
     ]
   }
 }
