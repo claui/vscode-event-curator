@@ -10,6 +10,37 @@ import { EventStreamFunction } from "./stream";
 
 const schemesToExclude: string[] = ["git", "gitfs", "output", "vscode"];
 
+/**
+ * Determines if a DocumentSelector specifies a language constraint.
+ *
+ * A DocumentSelector can specify a language in several ways:
+ * - As a string (which represents a language ID)
+ * - As an array containing language IDs or DocumentFilters with
+ *    language properties
+ * - As a DocumentFilter object with a language property
+ *
+ * @param selector The DocumentSelector to check
+ * @returns true if the selector specifies a language constraint,
+ *    false otherwise
+ */
+export function selectorSpecifiesLanguage(selector: DocumentSelector): boolean {
+  if (typeof selector === "string") {
+    return !!selector;
+  }
+  if (Array.isArray(selector)) {
+    return selector.some(selectorSpecifiesLanguage);
+  }
+  if (
+    typeof selector === "object" &&
+    selector !== null &&
+    "language" in selector &&
+    selector.language
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export function relevantChangeEventsByLanguage(
   selector: DocumentSelector,
 ): EventStreamFunction<TextDocumentChangeEvent, TextDocumentChangeEvent, []> {

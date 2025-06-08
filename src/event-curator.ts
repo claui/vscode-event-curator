@@ -12,6 +12,7 @@ import {
   relevantChangeEventsByScheme,
   relevantTextDocumentsByLanguage,
   relevantTextDocumentsByScheme,
+  selectorSpecifiesLanguage,
 } from "./event-curator/filters";
 import { stream } from "./event-curator/stream";
 import { throttleEvent } from "./event-curator/throttle";
@@ -37,39 +38,54 @@ export class EventCurator {
   onDidInitiallyFindRelevantTextDocument(
     ...args: Parameters<Event<TextDocument>>
   ) {
-    return stream(EventCurator.#onDidInitiallyFindTextDocument)
-      .select(relevantTextDocumentsByScheme)
-      .select(relevantTextDocumentsByLanguage(this.#config),
-      )(...args);
+    const _stream = stream(EventCurator.#onDidInitiallyFindTextDocument)
+    _stream.select(relevantTextDocumentsByScheme)
+
+    if(selectorSpecifiesLanguage(this.#config)) {
+      _stream.select(relevantTextDocumentsByLanguage(this.#config))
+    }
+
+    return _stream(...args)
   }
 
   onDidChangeRelevantTextDocument(
     ...args: Parameters<Event<TextDocument>>
   ) {
-    return stream(workspace.onDidChangeTextDocument)
-      .select(relevantChangeEventsByScheme)
-      .select(relevantChangeEventsByLanguage(this.#config))
-      .map(throttleEvent(
-        this.#config.changeEventThrottleMillis, (e) => e.document))
-      .select(ignoreIfAlreadyClosed,
-      )(...args);
+    const _stream = stream(workspace.onDidChangeTextDocument)
+    _stream.select(relevantChangeEventsByScheme)
+
+    if(selectorSpecifiesLanguage(this.#config)) {
+      _stream.select(relevantChangeEventsByLanguage(this.#config))
+    }
+
+    const throttledStream = _stream.map(throttleEvent(
+      this.#config.changeEventThrottleMillis, (e) => e.document))
+    throttledStream.select(ignoreIfAlreadyClosed)
+
+    return throttledStream(...args)
   }
 
   onDidOpenRelevantTextDocument(
     ...args: Parameters<Event<TextDocument>>
   ) {
-    return stream(workspace.onDidOpenTextDocument)
-      .select(relevantTextDocumentsByScheme)
-      .select(relevantTextDocumentsByLanguage(this.#config),
-      )(...args);
+    const _stream = stream(workspace.onDidOpenTextDocument)
+    _stream.select(relevantTextDocumentsByScheme)
+
+    if(selectorSpecifiesLanguage(this.#config)) {
+      _stream.select(relevantTextDocumentsByLanguage(this.#config))
+    }
+
+    return _stream(...args)
   }
 
   onDidCloseRelevantTextDocument(
     ...args: Parameters<Event<TextDocument>>
   ) {
-    return stream(workspace.onDidCloseTextDocument)
-      .select(relevantTextDocumentsByScheme)
-      .select(relevantTextDocumentsByLanguage(this.#config),
-      )(...args);
+    const _stream = stream(workspace.onDidCloseTextDocument)
+    _stream.select(relevantTextDocumentsByScheme)
+    if(selectorSpecifiesLanguage(this.#config)) {
+      _stream.select(relevantTextDocumentsByLanguage(this.#config))
+    }
+    return _stream(...args)
   }
 }
